@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const expenseSchema = new Schema({
+const expense = new Schema({
     description:{
         type: String,
         required: true
@@ -23,7 +23,7 @@ const expenseSchema = new Schema({
 
 });
 
-module.exports = mongoose.model("Expenses", expenseSchema);
+module.exports = mongoose.model("Expense", expense);
 
 // const Sequelize = require('sequelize');
 // const sequelize = require("../util/database");

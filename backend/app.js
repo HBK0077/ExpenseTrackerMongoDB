@@ -10,10 +10,10 @@ const compression = require("compression");
 
 
 const expenseDetails=require("./routes/expenses")
-const premiumFeatureDetails = require("./routes/premium-feature-route");
-const premiumDetails = require("./routes/premium-route");
-const userDetails = require("./routes/user-routes");
-const resetPassword = require("./routes/reset-password")
+const premiumFeatureDetails = require("./routes/premiumfeature");
+const premiumDetails = require("./routes/premium");
+const userDetails = require("./routes/user");
+const resetPassword = require("./routes/resetpassword")
 
 
 const User = require("./models/user");

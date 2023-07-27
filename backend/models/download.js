@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const downloadSchema = new Schema({
+const download = new Schema({
     fileUrl:{
         type: String
     },
@@ -12,7 +12,7 @@ const downloadSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model("Downloads", downloadSchema)
+module.exports = mongoose.model("Download", download)
 // const Sequelize = require('sequelize');
 // const sequelize = require("../util/database");
 

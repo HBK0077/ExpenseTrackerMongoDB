@@ -11,7 +11,7 @@ button.addEventListener("click", async(e)=>{
         password:password.value
     }
     //console.log(obj);
-    const userLogin = await axios.post("http://localhost:3500/user-login",obj)
+    const userLogin = await axios.post("http://localhost:3500/login",obj)
         
         if(userLogin.data.success===true){
 

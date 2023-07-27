@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const uuid=require("uuid")
 const Schema = mongoose.Schema;
 
-const forgotPasswordSchema = new Schema({
+const forgotPassword = new Schema({
     _id: { 
         type: String, 
         default: function genUUID() {
@@ -21,7 +21,7 @@ const forgotPasswordSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model("Forgotpasswords", forgotPasswordSchema)
+module.exports = mongoose.model("Forgotpassword", forgotPassword)
 // const Sequelize = require('sequelize');
 // const sequelize = require('../util/database');
 

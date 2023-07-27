@@ -13,7 +13,7 @@ button.addEventListener("click", async(e)=>{
         password:password.value
     }
     console.log(obj);
-    const adduser = await axios.post("http://localhost:3500/add-user",obj)
+    const adduser = await axios.post("http://localhost:3500/user",obj)
 
         //console.log(response.data.newUser);
         if(adduser.data.newUser){

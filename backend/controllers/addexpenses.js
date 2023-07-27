@@ -43,7 +43,7 @@ exports.addExpenses = async(req,res,next)=>{
 
 exports.getExpenses = async(req,res,next)=>{
     try{
-        const userId = req.user[0]._id;
+        const userId = req.user[0]._id; // we get an array of object so user[0]
         const data = await expense.find({
             userId: userId
         });
@@ -97,18 +97,21 @@ exports.deleteExpense = async(req,res,next)=>{
  }
 
 
+
+
 exports.showNumberExpense = async(req,res,next)=>{
     try{
         const{page,pagesize}=req.query; //here we will get the value for pagination
+        console.log("page>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", page);
+        console.log("pagesize>>>>>>>>>>>>>>>>>>>>>>>>>", pagesize);
         const limits=+pagesize
         const userId = req.user[0]._id;
         const data=  await expense.find({
             userId: userId
-        },{
-            offset:(page-1)*pagesize
-        }).limit(limits);
-        // remeber that inclusion and exclusion of the values in the projection is not supported in mongodb.
-        console.log(data)
+        })
+        .skip((page-1) * pagesize)
+        .limit(limits);
+        console.log("backend expense data length>>>>>>>>>>>>>>>>>>>>>>>>",data.length)
         res.json({Data:data})
     }catch(e){
         console.log("pagination error-->",e)

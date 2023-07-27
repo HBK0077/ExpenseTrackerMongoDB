@@ -7,6 +7,7 @@ let error=document.getElementById("error");
 let parentNode=document.getElementById("allExpenses");
 //let parentSelectNode = document.getElementById("selecting");
 let btn = document.getElementById("premium");
+let paginationBtn = document.getElementById("page");
 
 
 //token decoder
@@ -112,9 +113,6 @@ window.addEventListener("DOMContentLoaded", async()=>{
         showPremiumButton();
         showLeaderboard();
         showDownloadButton();
-        
-
-
         localStorage.setItem('token', token);
         
        }
@@ -129,27 +127,34 @@ window.addEventListener("DOMContentLoaded", async()=>{
     }
 })
 
+// paginationBtn.addEventListener("click", async(e) =>{
 async function pagination(){
     try{
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3500/show-expenses",{headers: {"Authorization": token}})
-        console.log(response.data.allExpense);
+        const response = await axios.get("http://localhost:3500/expenses",{headers: {"Authorization": token}})
+        //console.log(response.data.allExpense);
         var pagination = document.getElementById("pagination");
         const pagesize=document.getElementById("pagesize");
         var totalPagesize = localStorage.getItem("pageSize");
         const totalPage = Math.ceil((response.data.allExpense.length)/totalPagesize);
-        //console.log("This is >>>>>>>>>>>>>>>>>>>>>>>>>>>>", totalPage);
+        // for(let i=0;i<response.data.allExpense.length;i++){
+        //     showBrowser(response.data.allExpense[i]);
+        // }
+        console.log("This is >>>>>>>>>>>>>>>>>>>>>>>>>>>>", totalPage);
         if(!totalPagesize){
             localStorage.setItem("pageSize", 5);
-
         }
-        const result = await axios.get(`http://localhost:3500/pagination?page=${1}&pagesize=${5}`,{headers: {"Authorization": token}});
-        let allExpense = result.data.Data;
-        console.log(allExpense);
 
+        
+
+        const result = await axios.get(`http://localhost:3500/pagination?page=${1}&pagesize=${totalPagesize}`,{headers: {"Authorization": token}});
+        let allExpense = result.data.Data;
+        console.log("Length>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", allExpense.length);
         for(let i=0;i<allExpense.length;i++){
             showBrowser(result.data.Data[i]);
         }
+
+
         for(let i=0;i<totalPage;i++){
             let page=i+1;
             button = document.createElement("button");
@@ -158,7 +163,7 @@ async function pagination(){
                 parentNode.innerHTML = "";
                 const ress = await axios.get(`http://localhost:3500/pagination?page=${page}&pagesize=${totalPagesize}`,{headers: {"Authorization": token}});
                 let allExpense = ress.data.Data;
-                console.log(allExpense);
+                console.log("Expense legth>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..", allExpense.length);
                 for(let i=0;i<allExpense.length;i++){
                     showBrowser(ress.data.Data[i]);
                 }        
@@ -186,7 +191,7 @@ function showBrowser(show){
     //console.log(show);
     var childNode=`<li id=${show._id} style="margin-bottom:10px;">${show.description}-${show.amount}-${show.category}
              <button onclick="deleteExpense('${show._id}')" style="float:right; margin-left:5px;">Delete</button>  
-             <button onclick=editExpense('${show._id}','${show.description}','${show.amount}','${show.category}') style="float:right;">Edit</button>
+             
                      </li>`
                      parentNode.innerHTML=parentNode.innerHTML+childNode;
 
@@ -198,7 +203,7 @@ async function deleteExpense(key){
     try{
         console.log(parentNode)
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:3500/delete-expenses/${key}`,{headers: {"Authorization": token}})
+        await axios.delete(`http://localhost:3500/expenses/${key}`,{headers: {"Authorization": token}})
         console.log("Entered Deleted DOM");
         let child = document.getElementById(key);
         //console.log(child);
@@ -225,7 +230,7 @@ button.addEventListener("click", async(e)=>{
     };
     console.log(myObj);
     
-    const addExpense = await axios.post("http://localhost:3500/add-expenses",myObj,{headers:{'Authorization': token}})
+    const addExpense = await axios.post("http://localhost:3500/expenses",myObj,{headers:{'Authorization': token}})
         //console.log(response);
         console.log("post -->", addExpense.data.newexpense);
         showBrowser(addExpense.data.newexpense);
@@ -242,13 +247,13 @@ button.addEventListener("click", async(e)=>{
 document.getElementById("premium").onclick = async function(e){
     try{
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:3500/premium-membership',{headers:{"Authorization": token}});
+    const response = await axios.get('http://localhost:3500/premiummembership',{headers:{"Authorization": token}});
     console.log(response);
     var options = {
         "key": response.data.key_id,
         "order_id": response.data.orderr.id,
         "handler": async function(response){
-            let result = await axios.post("http://localhost:3500/update-transaction-status",{
+            let result = await axios.post("http://localhost:3500/updatetransactionstatus",{
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id,
         },{headers: {"Authorization": token}})
@@ -272,7 +277,7 @@ document.getElementById("premium").onclick = async function(e){
 
     rzp1.on("payment.failed", async()=>{
         key = response.data.order.id;
-        let failed = await axios.post("http://localhost:3500/update-transaction-status",{
+        let failed = await axios.post("http://localhost:3500/updatetransactionstatus",{
             order_id: key,
             payment_id: null
         },{headers: {"Authorization": token}})

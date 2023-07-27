@@ -38,10 +38,7 @@ exports.downloadExpense = async(req,res,next)=>{
             fileUrl: fileUrl,
             userId: userId
         });
-        // await downloadFile.create({
-        //     fileUrl: fileUrl,
-        //     userId: userId
-        // })
+        await downloadData.save();
         return res.json({fileUrl, success:true});
         
 
